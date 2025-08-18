@@ -1,5 +1,8 @@
-import { posts } from "@/data/posts";
-import Link from "next/link";
+import { Suspense } from 'react';
+import { Loading } from '@/components/Loading';
+import { PostList } from '@/components/PostList';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { NewPost } from '@/components/NewPost';
 
 export default async function Posts({
   searchParams,
@@ -9,14 +12,6 @@ export default async function Posts({
   }>;
 }) {
   const criteria = (await searchParams).criteria;
-  const resolvedPosts =
-    typeof criteria === 'string'
-      ? posts.filter((post) =>
-              post.title
-                .toLowerCase()
-                .includes(criteria.toLowerCase()),
-        )
-    : posts;
   const resolvedHeading =
     typeof criteria === 'string'
       ? `Posts for ${criteria}`
@@ -24,22 +19,13 @@ export default async function Posts({
 
   return (
     <main>
-      <h2>
-        {resolvedHeading}
-      </h2>
-
-      <ul>
-        {resolvedPosts.map((post) => (
-          <li key={post.id}>
-            <Link href={`/posts/${post.id}`}>
-              {post.title}
-            </Link>
-            <p>
-              {post.description}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <h2>{resolvedHeading}</h2>
+      <NewPost />
+      <Suspense fallback={<Loading />}>
+        <ErrorBoundary>
+          <PostList criteria={criteria} />
+        </ErrorBoundary>
+      </Suspense>
     </main>
   );
 }

@@ -1,23 +1,20 @@
 'use client';
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Form from 'next/form';
 
 export function Header() {
   const pathname = usePathname();
-
   return (
     <header>
       <Link
-        href={`/`}
+        href="/"
         className={pathname === '/' ? 'active' : ''}
       >
         Home
       </Link>
-
       <Link
-        href={`/posts`}
+        href="/posts"
         className={pathname === '/posts' ? 'active' : ''}
       >
         Posts
@@ -31,5 +28,5 @@ export function Header() {
         />
       </Form>
     </header>
-  )
+  );
 }
